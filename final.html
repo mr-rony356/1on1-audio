@@ -3,121 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Custom Audio Player</title>
-    <link rel="stylesheet" href="styles.css">
-    <style>
-.audio-container
-{
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: min-content;
-            width: 100%;
-            margin: 0;
-        }
-        .audio-player {
-            display: flex;
-            align-items: center;
-            background-color: #fff;
-            padding: 10px 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        #play-pause-button, #mute-button, #settings-button {
-            background: none;
-            border: none;
-            font-size: 1.5rem;
-            margin: 0 10px;
-            cursor: pointer;
-        }
-
-        #seek-bar, #volume-bar {
-            width: 100px;
-            margin: 0 10px;
-        }
-
-        #current-time, #remaining-time, #duration {
-            font-family: 'Arial', sans-serif;
-            font-size: 0.9rem;
-            color: #333;
-        }
-
-    </style>
+    <title>Document</title>
 </head>
 <body>
-    <div class="audio-container">
-        <div class="audio-player"> 
-            <button id="play-pause-button" class="play">Play ▶️</button>
-            <input type="range" id="seek-bar" value="0" max="100">
-            <span id="current-time">00:00</span>
-            <span>/</span>
-            <span id="remaining-time">8:44å</span>
-            <!-- <button id="mute-button">🔊</button> -->
-            <!-- <input type="range" id="volume-bar" value="100" max="100"> -->
-            <audio id="audio" src="./eric audio.mp3"></audio>
-        </div>
-    
-    </div>
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const audio = document.getElementById('audio');
-            const playPauseButton = document.getElementById('play-pause-button');
-            const seekBar = document.getElementById('seek-bar');
-            const currentTimeElement = document.getElementById('current-time');
-            const durationElement = document.getElementById('duration');
-            const remainingTimeElement = document.getElementById('remaining-time');
-            const muteButton = document.getElementById('mute-button');
-            const volumeBar = document.getElementById('volume-bar');
-
-            playPauseButton.addEventListener('click', () => {
-                if (audio.paused) {
-                    audio.play();
-                    playPauseButton.textContent = 'Pause ⏸️';
-                } else {
-                    audio.pause();
-                    playPauseButton.textContent = 'Play ▶️';
-                }
-            });
-
-            audio.addEventListener('loadedmetadata', () => {
-                durationElement.textContent = formatTime(audio.duration);
-            });
-
-            audio.addEventListener('timeupdate', () => {
-                const currentTime = Math.floor(audio.currentTime);
-                const duration = Math.floor(audio.duration);
-                const progress = (currentTime / duration) * 100;
-                seekBar.value = progress;
-                currentTimeElement.textContent = formatTime(currentTime);
-                remainingTimeElement.textContent = `${formatTime(duration)}`;
-            });
-
-            seekBar.addEventListener('input', () => {
-                const duration = Math.floor(audio.duration);
-                const newTime = (seekBar.value / 100) * duration;
-                audio.currentTime = newTime;
-            });
-
-            muteButton.addEventListener('click', () => {
-                audio.muted = !audio.muted;
-                muteButton.textContent = audio.muted ? '🔇' : '🔊';
-            });
-
-            volumeBar.addEventListener('input', () => {
-                audio.volume = volumeBar.value / 100;
-            });
-
-            function formatTime(seconds) {
-                const minutes = Math.floor(seconds / 60);
-                seconds = Math.floor(seconds % 60);
-                if (minutes > 0) {
-                    return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
-                } else {
-                    return `${seconds < 10 ? '0' : ''}${seconds}`;
-                }
-            }
-        });
-    </script>
+    <div class="plyr__video-embed" id="player">
+        <iframe style="width: 100%; border: none;"
+          src="https://mr-rony356.github.io/Eric-Audio-button/"
+          allowfullscreen
+          allowtransparency
+        ></iframe>
+      </div>
 </body>
 </html>
