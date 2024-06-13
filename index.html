@@ -8,10 +8,11 @@
     <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" />
     <!-- Wavesurfer CSS -->
     <style>
-        .audio-container{
+        .audio-container {
             font-family: Arial, sans-serif;
             display: flex;
             justify-content: center;
+            padding: 0 20px;
             width: 100%;
         }
         .audio-player-container {
@@ -21,9 +22,10 @@
             max-width: 700px;
             width: 100%;
             background-color: #fff;
-            padding: 5px;
+            padding: 15px;
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            flex-direction: column;
         }
         .play-btn {
             background-color: #d32f2f;
@@ -44,9 +46,16 @@
         }
         .waveform {
             flex: 1;
+            width: 100%;
         }
         .audio-time {
-            color: #d32f2f;
+            color: #888;
+            font-weight: bold;
+        }
+        @media (min-width: 768px) {
+            .audio-player-container {
+                flex-direction: row;
+            }
         }
     </style>
 </head>
@@ -59,9 +68,8 @@
                 </svg>
             </button>
             <div class="waveform" id="waveform"></div>
-            <div class="audio-time" id="audio-time">0:00 / 0:00</div>
+            <div class="audio-time" id="audio-time">0:00</div>
         </div>
-    
     </div>
 
     <!-- Plyr JavaScript -->
@@ -93,16 +101,15 @@
                 }
             });
 
-            waveform.on('audioprocess', () => {
+            waveform.on('audioprocess', updateTimer);
+            waveform.on('ready', updateTimer);
+
+            function updateTimer() {
                 const currentTime = waveform.getCurrentTime();
                 const duration = waveform.getDuration();
-                audioTime.textContent = `${formatTime(currentTime)} / ${formatTime(duration)}`;
-            });
-
-            waveform.on('ready', () => {
-                const duration = waveform.getDuration();
-                audioTime.textContent = `0:00 / ${formatTime(duration)}`;
-            });
+                const remainingTime = duration - currentTime;
+                audioTime.textContent = `${formatTime(remainingTime)}`;
+            }
 
             function formatTime(seconds) {
                 const minutes = Math.floor(seconds / 60);
