@@ -6,75 +6,86 @@
     <title>Custom Audio Player</title>
     <!-- Plyr CSS -->
     <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" />
-    <!-- Wavesurfer CSS -->
     <style>
       .audio-container {
         font-family: Arial, sans-serif;
         display: flex;
         justify-content: center;
         width: 100%;
+        min-height: max-content;
+        /* height: 350px; */
+      }
+      #plyr-audio {
+        pointer-events: none;
+      }
+      .plyr--audio .plyr__controls {
+        background: transparent !important;
       }
       .audio-player-container {
         display: flex;
         align-items: center;
-        gap: 10px;
-        max-width: 700px;
+        max-width: 100%;
         width: 100%;
+        height: 100%;
         background-color: transparent;
         padding: 10px;
         border-radius: 10px;
-        /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); */
         flex-wrap: wrap;
+        justify-content: center;
       }
       .play-btn {
-        background-color: #d32f2f;
+        cursor: pointer;
+        width: 100%;
+        height: 100%;
+        background: none;
+        border: none;
+      }
+      .play-btn img {
+        width: 100%;
+        height: 250px;
+        object-fit: contain;
+        margin-bottom: 15px;
+      }
+      .speed-btn {
         color: #fff;
         border: none;
         border-radius: 50%;
-        width: 50px;
-        height: 50px;
+        width: 40px;
+        height: 40px;
         display: flex;
         align-items: center;
         justify-content: center;
         cursor: pointer;
       }
-      .play-btn svg {
-        width: 24px;
-        height: 24px;
-        fill: #fff;
-      }
-      .waveform {
-        flex: 1;
-        height: 60px;
-        min-width: 0; /* Ensures proper flex behavior */
+      .speed-btn img {
+        width: 32px;
+        height: 32px;
+        border-radius: 50px;
       }
       .audio-time {
         color: #888;
         font-weight: bold;
         text-align: center;
+        font-size: 16px;
       }
       @media (max-width: 768px) {
         .audio-player-container {
-          flex-wrap: wrap;
           justify-content: center;
         }
-        .play-btn {
-          width: 40px;
-          height: 40px;
-        }
-        .play-btn svg {
-          width: 20px;
-          height: 20px;
-        }
-        .waveform {
-          height: 50px;
+        .play-btn img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+      }
+
+        .speed-btn {
+          width: 35px;
+          height: 35px;
         }
       }
       @media (max-width: 768px) {
-        .audio-time {
-          margin-top: 10px;
-        }
-        .play-btn {
+        .play-btn,
+        .speed-btn {
           margin-top: 5px;
         }
       }
@@ -83,53 +94,72 @@
   <body>
     <div class="audio-container">
       <div class="audio-player-container">
-        <button class="play-btn">
-          <svg viewBox="0 0 24 24">
-            <path d="M8 5v14l11-7z"></path>
-          </svg>
+        <button class="play-btn" id="play-btn">
+          <img id="play-img" src="play.svg" alt="Play Button" />
         </button>
-        <div class="waveform" id="waveform"></div>
+        <button class="speed-btn">
+          <img src="./run.png" alt="" height="30px" />
+        </button>
+        <div id="plyr-audio" class="plyr">
+          <audio id="audio-player" controls>
+            <source src="./eric audio.mp3" type="audio/mp3" />
+          </audio>
+        </div>
+
         <div class="audio-time" id="audio-time">0:00</div>
       </div>
     </div>
 
     <!-- Plyr JavaScript -->
     <script src="https://cdn.plyr.io/3.7.8/plyr.polyfilled.js"></script>
-    <!-- Wavesurfer JavaScript -->
-    <script src="https://unpkg.com/wavesurfer.js"></script>
     <script>
       document.addEventListener("DOMContentLoaded", () => {
-        const playButton = document.querySelector(".play-btn");
+        const playButton = document.getElementById("play-btn");
+        const playImg = document.getElementById("play-img");
+        const speedButton = document.querySelector(".speed-btn");
         const audioTime = document.getElementById("audio-time");
-        const waveform = WaveSurfer.create({
-          container: "#waveform",
-          waveColor: "#cccccc",
-          progressColor: "#d32f2f",
-          height: 60,
-          barWidth: 2,
-          cursorWidth: 0,
+        const audioElement = document.getElementById("audio-player");
+        const plyrAudio = document.getElementById("plyr-audio");
+
+        const player = new Plyr(audioElement, {
+          controls: ["progress"],
+          seekTime: 0,
+          disableContextMenu: true,
         });
 
-        waveform.load("./eric audio.mp3");
+        const playImage = "play.svg";
+        const playImageGray = "gray.svg"; // Replace with the actual path of the gray image
+
+        plyrAudio.style.display = "block"; // Show the Plyr controls
 
         playButton.addEventListener("click", () => {
-          if (waveform.isPlaying()) {
-            waveform.pause();
-            playButton.innerHTML =
-              '<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"></path></svg>';
+          if (player.playing) {
+            player.pause();
+            playImg.src = playImage;
           } else {
-            waveform.play();
-            playButton.innerHTML =
-              '<svg viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"></path></svg>';
+            player.play();
+            playImg.src = playImageGray;
           }
         });
 
-        waveform.on("audioprocess", updateTimer);
-        waveform.on("ready", updateTimer);
+        speedButton.addEventListener("click", () => {
+          const currentPlaybackRate = player.speed;
+          if (currentPlaybackRate === 1) {
+            player.speed = 1.5;
+            // speedButton.style.backgroundColor = "#FFD700"; // Change button color to indicate speed up
+            speedButton.innerHTML = `<img src="./runs.png" alt="" height="30px">`;
+          } else {
+            player.speed = 1;
+            // speedButton.style.backgroundColor = "rgb(204, 0, 0)"; // Revert button color to original
+            speedButton.innerHTML = `<img src="./run.png" alt="" height="30px">`;
+          }
+        });
+
+        player.on("timeupdate", updateTimer);
 
         function updateTimer() {
-          const currentTime = waveform.getCurrentTime();
-          const duration = waveform.getDuration();
+          const currentTime = player.currentTime;
+          const duration = player.duration;
           const remainingTime = duration - currentTime;
           audioTime.textContent = `${formatTime(remainingTime)}`;
         }
