@@ -3,113 +3,66 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Custom Audio Player</title>
-    <!-- Plyr CSS -->
-    <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" />
-    <!-- Wavesurfer CSS -->
+    <title>Audio Player</title>
+    <link rel="stylesheet" href="https://cdn.plyr.io/3.6.12/plyr.css" />
     <style>
-        .audio-container{
-            font-family: Arial, sans-serif;
+        .plyr__controls {
             display: flex;
-            justify-content: center;
-            width: 100%;
+            justify-content: space-between;
         }
-        .audio-player-container {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-            max-width: 700px;
-            width: 100%;
-            background-color: #fff;
-            padding: 5px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        .plyr__progress {
+            flex-grow: 1;
+            margin: 0 10px;
         }
-        .play-btn {
-            background-color: #d32f2f;
-            color: #fff;
-            border: none;
-            border-radius: 50%;
-            width: 70px;
-            height: 70px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-        }
-        .play-btn svg {
-            width: 36px;
-            height: 36px;
-            fill: #fff;
-        }
-        .waveform {
-            flex: 1;
-        }
-        .audio-time {
-            color: #d32f2f;
+        .plyr__time {
+            margin-left: 10px;
         }
     </style>
 </head>
 <body>
-    <div class="audio-container">
-        <div class="audio-player-container">
-            <button class="play-btn">
-                <svg viewBox="0 0 24 24">
-                    <path d="M8 5v14l11-7z"></path>
-                </svg>
-            </button>
-            <div class="waveform" id="waveform"></div>
-            <div class="audio-time" id="audio-time">0:00 / 0:00</div>
-        </div>
-    
+
+<div class="plyr__controls">
+    <button id="play-button" class="plyr__control" aria-label="Play">
+        <img src="play-button.svg" alt="Play" />
+    </button>
+    <div class="plyr__progress">
+        <div class="plyr__progress-bar"></div>
+        <div class="plyr__knob"></div>
     </div>
+    <div id="speed-control" class="plyr__control" aria-label="Speed">
+        <img src="speed-icon.svg" alt="Speed" />
+    </div>
+    <div class="plyr__time">
+        <span class="plyr__time--current">0:00</span>
+        <span class="plyr__time--separator"> / </span>
+        <span class="plyr__time--duration">0:00</span>
+    </div>
+</div>
 
-    <!-- Plyr JavaScript -->
-    <script src="https://cdn.plyr.io/3.7.8/plyr.polyfilled.js"></script>
-    <!-- Wavesurfer JavaScript -->
-    <script src="https://unpkg.com/wavesurfer.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const playButton = document.querySelector('.play-btn');
-            const audioTime = document.getElementById('audio-time');
-            const waveform = WaveSurfer.create({
-                container: '#waveform',
-                waveColor: '#cccccc',
-                progressColor: '#d32f2f',
-                height: 80,
-                barWidth: 2,
-                cursorWidth: 0,
-            });
+<script src="https://cdn.plyr.io/3.6.12/plyr.polyfilled.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const player = new Plyr('#audio-player', {
+            controls: ['play', 'progress', 'current-time', 'duration'],
+            settings: []
+        });
 
-            waveform.load('./eric audio.mp3');
-
-            playButton.addEventListener('click', () => {
-                if (waveform.isPlaying()) {
-                    waveform.pause();
-                    playButton.innerHTML = '<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"></path></svg>';
-                } else {
-                    waveform.play();
-                    playButton.innerHTML = '<svg viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"></path></svg>';
-                }
-            });
-
-            waveform.on('audioprocess', () => {
-                const currentTime = waveform.getCurrentTime();
-                const duration = waveform.getDuration();
-                audioTime.textContent = `${formatTime(currentTime)} / ${formatTime(duration)}`;
-            });
-
-            waveform.on('ready', () => {
-                const duration = waveform.getDuration();
-                audioTime.textContent = `0:00 / ${formatTime(duration)}`;
-            });
-
-            function formatTime(seconds) {
-                const minutes = Math.floor(seconds / 60);
-                const secs = Math.floor(seconds % 60);
-                return `${minutes}:${secs < 10 ? '0' : ''}${secs}`;
+        const playButton = document.getElementById('play-button');
+        playButton.addEventListener('click', () => {
+            if (player.playing) {
+                player.pause();
+            } else {
+                player.play();
             }
         });
-    </script>
+
+        const speedControl = document.getElementById('speed-control');
+        speedControl.addEventListener('click', () => {
+            const newSpeed = player.speed === 1 ? 1.5 : 1;
+            player.speed = newSpeed;
+        });
+    });
+</script>
+
 </body>
 </html>
