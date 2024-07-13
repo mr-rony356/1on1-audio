@@ -8,90 +8,88 @@
         <!-- Plyr CSS -->
         <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" />
         <style>
-        .audio-container {
-          font-family: Arial, sans-serif;
-          display: flex;
-          justify-content: center;
-          width: 100%;
-          min-height: max-content;
-          /* height: 350px; */
-        }
-        #plyr-audio {
-          pointer-events: none;
-        }
-        .plyr--audio .plyr__controls {
-          background: transparent !important;
-        }
-        .audio-player-container {
-          display: flex;
-          align-items: center;
-          max-width: 100%;
-          width: 100%;
-          height: 100%;
-          background-color: transparent;
-          padding: 10px;
-          border-radius: 10px;
-          flex-wrap: wrap;
-          justify-content: center;
-        }
-        .play-btn {
-          cursor: pointer;
-          width: 100%;
-          height: 100%;
-          background: none;
-          border: none;
-        }
-        .play-btn img {
-          width: 100%;
-          height: 250px;
-          object-fit: contain;
-          margin-bottom: 15px;
-        }
-        .speed-btn {
-          color: #fff;
-          border: none;
-          border-radius: 50%;
-          width: 40px;
-          height: 40px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          cursor: pointer;
-        }
-        .speed-btn img {
-          width: 32px;
-          height: 32px;
-          border-radius: 50px;
-        }
-        .audio-time {
-          color: #888;
-          font-weight: bold;
-          text-align: center;
-          font-size: 16px;
-        }
-        @media (max-width: 768px) {
+          .audio-container {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            width: 100%;
+            min-height: max-content;
+          }
+          #plyr-audio {
+            pointer-events: none;
+          }
+          .plyr--audio .plyr__controls {
+            background: transparent !important;
+          }
           .audio-player-container {
+            display: flex;
+            align-items: center;
+            max-width: 100%;
+            width: 100%;
+            height: 100%;
+            background-color: transparent;
+            padding: 10px;
+            border-radius: 10px;
+            flex-wrap: wrap;
             justify-content: center;
           }
+          .play-btn {
+            cursor: pointer;
+            width: 100%;
+            height: 100%;
+            background: none;
+            border: none;
+          }
           .play-btn img {
-          width: 100%;
-          height: 100%;
-          object-fit: contain;
-        }
-  
-          .speed-btn {
-            width: 35px;
-            height: 35px;
+            width: 100%;
+            height: 250px;
+            object-fit: contain;
+            margin-bottom: 15px;
           }
-        }
-        @media (max-width: 768px) {
-          .play-btn,
           .speed-btn {
-            margin-top: 5px;
+            color: #fff;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
           }
-        }
-      </style>
-        </head>
+          .speed-btn img {
+            width: 32px;
+            height: 32px;
+            border-radius: 50px;
+          }
+          .audio-time {
+            color: #888;
+            font-weight: bold;
+            text-align: center;
+            font-size: 16px;
+          }
+          @media (max-width: 768px) {
+            .audio-player-container {
+              justify-content: center;
+            }
+            .play-btn img {
+              width: 100%;
+              height: 100%;
+              object-fit: contain;
+            }
+            .speed-btn {
+              width: 35px;
+              height: 35px;
+            }
+          }
+          @media (max-width: 768px) {
+            .play-btn,
+            .speed-btn {
+              margin-top: 5px;
+            }
+          }
+        </style>
+      </head>
       <body>
         <div class="audio-container">
           <div class="audio-player-container">
@@ -109,7 +107,6 @@
             <div class="audio-time" id="audio-time">0:00</div>
           </div>
         </div>
-
         <!-- Plyr JavaScript -->
         <script src="https://cdn.plyr.io/3.7.8/plyr.polyfilled.js"></script>
         <script>
