@@ -89,19 +89,8 @@
             }
           }
         </style>
-        <!-- Google Tag Manager -->
-<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-})(window,document,'script','dataLayer','GTM-PQMDKK48');</script>
-<!-- End Google Tag Manager -->
       </head>
       <body>
-      <!-- Google Tag Manager (noscript) -->
-<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PQMDKK48"
-height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-<!-- End Google Tag Manager (noscript) -->
         <div class="audio-container">
           <div class="audio-player-container">
             <button class="play-btn" id="play-btn">
@@ -147,12 +136,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
               } else {
                 player.play();
                 playImg.src = playImageGray;
-                // Push event to data layer
-                window.dataLayer = window.dataLayer || [];
-                window.dataLayer.push({
-                  event: 'audio_play',
-                  audio_file: 'https://1on1-audio.vercel.app/audio/eric-voice.m4a' // Replace with your dynamic file name
-                });
               }
             });
 
@@ -182,7 +165,27 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
               return `${minutes}:${secs < 10 ? "0" : ""}${secs}`;
             }
           });
+          // GTM Custom Event Listener
+    (function() {
+      function addListener(c, b) {
+        b = b || document;
+        b.addEventListener(c, function(a) {
+            window.parent.dataLayer.push({
+                event: "custom." + a.type,
+                "gtm.element": a.target,
+                "gtm.elementClasses": a.target.className || "",
+                "gtm.elementId": a.target.id || "",
+                "gtm.elementTarget": a.target.target || "",
+                "gtm.elementUrl": a.target.href || a.target.action || "",
+                "gtm.originalEvent": a
+            });
+        }, true);
+    }
+       addListener("play", audioElement);
+    })();
+
         </script>
+        
       </body>
     </html>
   
