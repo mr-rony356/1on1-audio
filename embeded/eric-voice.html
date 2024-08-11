@@ -110,82 +110,84 @@
         <!-- Plyr JavaScript -->
         <script src="https://cdn.plyr.io/3.7.8/plyr.polyfilled.js"></script>
         <script>
-          document.addEventListener("DOMContentLoaded", () => {
-            const playButton = document.getElementById("play-btn");
-            const playImg = document.getElementById("play-img");
-            const speedButton = document.querySelector(".speed-btn");
-            const audioTime = document.getElementById("audio-time");
-            const audioElement = document.getElementById("audio-player");
-            const plyrAudio = document.getElementById("plyr-audio");
-
-            const player = new Plyr(audioElement, {
-              controls: ["progress"],
-              seekTime: 0,
-              disableContextMenu: true,
-            });
-
-            const playImage = "../play.svg";
-            const playImageGray = "../gray.svg"; // Replace with the actual path of the gray image
-
-            plyrAudio.style.display = "block"; // Show the Plyr controls
-
-            playButton.addEventListener("click", () => {
-              if (player.playing) {
-                player.pause();
-                playImg.src = playImage;
-              } else {
-                player.play();
-                playImg.src = playImageGray;
-              }
-            });
-
-            speedButton.addEventListener("click", () => {
-              const currentPlaybackRate = player.speed;
-              if (currentPlaybackRate === 1) {
-                player.speed = 1.5;
-                speedButton.innerHTML = "<img src='../runs.jpg' alt='' height='30px'>";
-              } else {
-                player.speed = 1;
-                speedButton.innerHTML = "<img src='../run.jpg' alt='' height='30px'>";
-              }
-            });
-
-            player.on("timeupdate", updateTimer);
-
-            function updateTimer() {
-              const currentTime = player.currentTime;
-              const duration = player.duration;
-              const remainingTime = duration - currentTime;
-              audioTime.textContent = `${formatTime(remainingTime)}`;
-            }
-
-            function formatTime(seconds) {
-              const minutes = Math.floor(seconds / 60);
-              const secs = Math.floor(seconds % 60);
-              return `${minutes}:${secs < 10 ? "0" : ""}${secs}`;
+        document.addEventListener("DOMContentLoaded", () => {
+          const playButton = document.getElementById("play-btn");
+          const playImg = document.getElementById("play-img");
+          const speedButton = document.querySelector(".speed-btn");
+          const audioTime = document.getElementById("audio-time");
+          const audioElement = document.getElementById("audio-player");
+          const plyrAudio = document.getElementById("plyr-audio");
+      
+          const player = new Plyr(audioElement, {
+            controls: ["progress"],
+            seekTime: 0,
+            disableContextMenu: true,
+          });
+      
+          const playImage = "https://1on1-audio.vercel.app/play.svg";
+          const playImageGray = "https://1on1-audio.vercel.app/gray.svg"; // Replace with the actual path of the gray image
+      
+          plyrAudio.style.display = "block"; // Show the Plyr controls
+      
+          playButton.addEventListener("click", () => {
+            if (player.playing) {
+              player.pause();
+              playImg.src = playImage;
+              dataLayer.push({
+                'event': 'audio_action',
+                'action': 'pause',
+                'audio_title': document.title
+              });
+            } else {
+              player.play();
+              playImg.src = playImageGray;
+              dataLayer.push({
+                'event': 'audio_action',
+                'action': 'play',
+                'audio_title': document.title
+              });
             }
           });
-          // GTM Custom Event Listener
-    (function() {
-      function addListener(c, b) {
-        b = b || document;
-        b.addEventListener(c, function(a) {
-            window.parent.dataLayer.push({
-                event: "custom." + a.type,
-                "gtm.element": a.target,
-                "gtm.elementClasses": a.target.className || "",
-                "gtm.elementId": a.target.id || "",
-                "gtm.elementTarget": a.target.target || "",
-                "gtm.elementUrl": a.target.href || a.target.action || "",
-                "gtm.originalEvent": a
-            });
-        }, true);
-    }
-       addListener("play", audioElement);
-    })();
-
-        </script>
-        
-      </body>
-    </html>
-  
+      
+          speedButton.addEventListener("click", () => {
+            const currentPlaybackRate = player.speed;
+            if (currentPlaybackRate === 1) {
+              player.speed = 1.5;
+              speedButton.innerHTML = "<img src='https://1on1-audio.vercel.app/runs.jpg' alt='' height='30px'>";
+              dataLayer.push({
+                'event': 'audio_action',
+                'action': 'speed_change',
+                'speed': 1.5,
+                'audio_title': document.title
+              });
+            } else {
+              player.speed = 1;
+              speedButton.innerHTML = "<img src='https://1on1-audio.vercel.app/run.jpg' alt='' height='30px'>";
+              dataLayer.push({
+                'event': 'audio_action',
+                'action': 'speed_change',
+                'speed': 1,
+                'audio_title': document.title
+              });
+            }
+          });
+      
+          player.on("timeupdate", updateTimer);
+      
+          function updateTimer() {
+            const currentTime = player.currentTime;
+            const duration = player.duration;
+            const remainingTime = duration - currentTime;
+            audioTime.textContent = `${formatTime(remainingTime)}`;
+          }
+          
+          function formatTime(seconds) {
+            const minutes = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return `${minutes}:${secs < 10 ? "0" : ""}${secs}`;
+          }
+          });
+          </script>
+          </body>
+          </html>
+          
