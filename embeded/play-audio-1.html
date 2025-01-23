@@ -49,13 +49,15 @@
         .speed-btn {
           color: #fff;
           border: none;
-          border-radius: 50%;
           width: 40px;
           height: 40px;
+          padding: 2px;
+          border-radius: 50%;
           display: flex;
           align-items: center;
           justify-content: center;
           cursor: pointer;
+          background-color: gray;
         }
         .speed-btn img {
           width: 32px !important;
@@ -64,8 +66,6 @@
           object-fit: cover; 
           max-width: 100%; 
           max-height: 100%;
-          min-width: 100%;
-          min-height: 100%;
         }
         .audio-time {
           color: #888;
@@ -83,12 +83,6 @@
           }
          
         }
-        @media (max-width: 768px) {
-          .play-btn,
-          .speed-btn {
-            margin-top: 5px;
-          }
-        }
       </style>
     </head>
     <body>
@@ -97,9 +91,9 @@
           <button class="play-btn" id="play-btn">
             <img id="play-img" src="https://host.the30x.com/play.svg" alt="Play Button" />
           </button>
-          <button class="speed-btn">
+          <div class="speed-btn">
             <img src="https://host.the30x.com/run.jpg" alt="" height="30px" />
-          </button>
+          </div>
           <div id="plyr-audio" class="plyr">
             <audio id="audio-player" controls>
               <source src="https://host.the30x.com/audio/play-audio-1.mp3" type="audio/mp3" />
